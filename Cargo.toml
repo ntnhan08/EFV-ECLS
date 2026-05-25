@@ -1,0 +1,38 @@
+[package]
+name        = "efv-core"
+version     = "1.0.0"
+edition     = "2021"
+description = "EFV – Extreme Fast Video · Rust core engine"
+license     = "MIT"
+authors     = ["EFV Team <team@efv.io>"]
+
+[lib]
+name       = "efv_core"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3          = { version = "0.21", features = ["extension-module", "abi3-py38"] }
+rayon         = "1.8"
+jpeg-decoder  = "0.3"
+jpeg-encoder  = "0.6"
+png           = "0.17"
+bytemuck      = { version = "1.14", features = ["derive"] }
+num-traits    = "0.2"
+
+[features]
+default  = []
+simd     = []          # enable manual SIMD paths (nightly only)
+
+[profile.release]
+opt-level     = 3
+lto           = "fat"
+codegen-units = 1
+panic         = "abort"
+strip         = true
+
+[profile.dev]
+opt-level = 1          # keep dev builds reasonably fast
+
+[[bench]]
+name    = "frame_bench"
+harness = false

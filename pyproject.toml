@@ -1,0 +1,57 @@
+[build-system]
+requires      = ["maturin>=1.4,<2.0"]
+build-backend = "maturin"
+
+[project]
+name            = "efv"
+version         = "1.0.0"
+description     = "EFV – Extreme Fast Video: Rust+GPU-accelerated video processing for Python"
+readme          = "README.md"
+license         = { text = "MIT" }
+authors         = [{ name = "EFV Team", email = "team@efv.io" }]
+requires-python = ">=3.8"
+keywords        = ["video", "ffmpeg", "avi", "rust", "gpu", "cuda", "metal", "opencl"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Rust",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+# Optional heavy dependencies – install only if you have the system libs
+[project.optional-dependencies]
+pillow  = ["Pillow>=9.0"]
+dev     = ["maturin>=1.4", "pytest>=7.0", "pytest-benchmark"]
+gpu     = []   # GPU lib is loaded at runtime via ctypes; no pip install needed
+
+[project.urls]
+Homepage      = "https://github.com/efv-io/efv"
+Documentation = "https://docs.efv.io"
+"Bug Tracker" = "https://github.com/efv-io/efv/issues"
+
+# ── Maturin ───────────────────────────────────────────────────────────────
+
+[tool.maturin]
+# Python module name matches [lib] name = "efv_core" in Cargo.toml
+module-name      = "efv.efv_core"   # install as efv/efv_core.so
+python-packages  = ["efv"]
+features         = ["pyo3/extension-module"]
+# Build for stable ABI (works with any Python 3.8+)
+compatibility    = "linux"
+strip            = true
+release          = true
+
+# ── Pytest ────────────────────────────────────────────────────────────────
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts   = "-v --tb=short"
